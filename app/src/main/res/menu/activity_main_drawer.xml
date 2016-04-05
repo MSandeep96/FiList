@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_pending"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Pending"
+            android:checked="true"/>
+        <item
+            android:id="@+id/nav_completed"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Completed" />
+        <item
+            android:id="@+id/nav_inspire"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Inspiration" />
+        <item
+            android:id="@+id/nav_aboutus"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="About us" />
+    </group>
+
+</menu>
