@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.sande.filist.Interfaces.callEditTitleDialog;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
 
@@ -21,12 +22,13 @@ import io.realm.RealmResults;
  * Created by Sandeep on 30-Mar-16.
  */
 public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
+    callEditTitleDialog mActInterfaced;
     Context mContext;
     LayoutInflater mInflater;
     private RealmResults<PendingDB> mResults;
     public PendingAdapter(Context context,RealmResults<PendingDB> results) {
         mContext=context;
+        mActInterfaced=(callEditTitleDialog)context;
         mInflater= LayoutInflater.from(context);
         mResults=results;
     }
@@ -42,10 +44,16 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof PendingVH){
             ((PendingVH)holder).titleTV.setText(mResults.get(position).getTitle());
             ((PendingVH)holder).dateTV.setText(mResults.get(position).getDateFormatted());
+            ((PendingVH)holder).editIB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mActInterfaced.callETD(mResults.get(position));
+                }
+            });
         }
     }
 

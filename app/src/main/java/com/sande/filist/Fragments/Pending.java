@@ -161,6 +161,10 @@ public class Pending extends Fragment implements SwipeableLeft {
         mSnack.show();
     }
 
+    public void callNotifyUpd(){
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onDestroy() {

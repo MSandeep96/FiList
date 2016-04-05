@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <FrameLayout
-        android:id="@+id/fl_daif"
+        android:id="@+id/fl_deif"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary">
@@ -13,8 +13,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Pending Item"
-            android:textStyle="bold"
+            android:text="Edit Item"
             android:fontFamily="roboto-condensed"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -22,40 +21,40 @@
     </FrameLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:layout_below="@+id/fl_daif"
-        android:id="@+id/ti_daif"
+        android:layout_below="@+id/fl_deif"
+        android:id="@+id/ti_deif"
         android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
 
         <EditText
-            android:id="@+id/et_daif"
+            android:id="@+id/et_deif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add item"
+            android:hint="Edit item"
             android:maxLines="8" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_add_daif"
+        android:id="@+id/btn_add_deif"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/ti_daif"
+        android:layout_below="@+id/ti_deif"
         android:background="@null"
-        android:text="Add"
-        android:textColor="@color/colorAccent" />
+        android:text="Change"
+        android:textColor="@color/colorDisabled" />
 
     <Button
-        android:id="@+id/btn_dis_daif"
+        android:id="@+id/btn_dis_deif"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ti_daif"
+        android:layout_below="@+id/ti_deif"
         android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/btn_add_daif"
+        android:layout_toLeftOf="@+id/btn_add_deif"
         android:background="@null"
         android:text="Dismiss"
         android:textColor="@color/colorAccent" />

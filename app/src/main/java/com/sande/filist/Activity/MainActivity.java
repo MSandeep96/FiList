@@ -1,37 +1,35 @@
 package com.sande.filist.Activity;
 
-        import android.support.v4.app.Fragment;
-        import android.os.Bundle;
-        import android.support.design.widget.FloatingActionButton;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.app.FragmentTransaction;
-        import android.view.View;
-        import android.support.design.widget.NavigationView;
-        import android.support.v4.view.GravityCompat;
-        import android.support.v4.widget.DrawerLayout;
-        import android.support.v7.app.ActionBarDrawerToggle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.Toolbar;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.widget.Toast;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
-        import com.sande.filist.DialogueFragments.AddorEditDial;
-        import com.sande.filist.Fragments.*;
-        import com.sande.filist.R;
-        import com.sande.filist.Utils.Utils;
+import com.sande.filist.DialogueFragments.AddPendDial;
+import com.sande.filist.DialogueFragments.EditPendDial;
+import com.sande.filist.Fragments.*;
+import com.sande.filist.Interfaces.callEditTitleDialog;
+import com.sande.filist.R;
+import com.sande.filist.RealmClasses.PendingDB;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,callEditTitleDialog {
 
     private int frag;
     private int onFrag;
     private FloatingActionButton fab;
-    private Pending mPend;
-    private Completed mComp;
-    private Inspiration mInsp;
-    private About_Us mAbus;
+    private Fragment mFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     FragmentManager mFragManager = getSupportFragmentManager();
-                    AddorEditDial mAdd = new AddorEditDial();
+                    AddPendDial mAdd = new AddPendDial();
                     mAdd.show(mFragManager, "Dialogue");
                 }
             });
@@ -64,21 +62,29 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
-        onFrag = 2;//gets set to 0 after next instruction
-        changeFrag(0, new Pending());
+
+        if (savedInstanceState != null) {
+            mFrag = getSupportFragmentManager().getFragment(savedInstanceState, "confgFragm");
+            onFrag = savedInstanceState.getInt("onFrag") - 1;
+            changeFrag(onFrag + 1, mFrag);
+        } else {
+            onFrag = 2;//gets set to 0 after next instruction
+            mFrag = new Pending();
+            changeFrag(0, mFrag);
+        }
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                Fragment mVisFrag = getSupportFragmentManager().findFragmentByTag("visible_frag");
-                if (mVisFrag instanceof Pending) {
+                mFrag = getSupportFragmentManager().findFragmentByTag("visible_frag");
+                if (mFrag instanceof Pending) {
                     setTopBar(0);
                     onFrag = 0;
                     fab.show();
-                } else if (mVisFrag instanceof Completed) {
+                } else if (mFrag instanceof Completed) {
                     setTopBar(1);
                     onFrag = 1;
                     fab.hide();
-                } else if (mVisFrag instanceof Inspiration) {
+                } else if (mFrag instanceof Inspiration) {
                     setTopBar(2);
                     onFrag = 2;
                     fab.hide();
@@ -131,34 +137,22 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Fragment mFrag = null;
+        mFrag = null;
         if (id == R.id.nav_pending) {
             frag = 0;
-            if(mPend==null){
-                mPend=new Pending();
-            }
-            mFrag = mPend;
+            mFrag = new Pending();
             fab.show();
         } else if (id == R.id.nav_completed) {
             frag = 1;
-            if(mComp==null){
-                mComp=new Completed();
-            }
-            mFrag = mComp;
+            mFrag = new Completed();
             fab.hide();
         } else if (id == R.id.nav_inspire) {
             frag = 2;
-            if(mInsp==null){
-                mInsp=new Inspiration();
-            }
-            mFrag = mInsp;
+            mFrag = new Inspiration();
             fab.hide();
         } else if (id == R.id.nav_aboutus) {
             frag = 3;
-            if(mAbus==null){
-                mAbus=new About_Us();
-            }
-            mFrag = mAbus;
+            mFrag = new About_Us();
             fab.hide();
         }
         changeFrag(frag, mFrag);
@@ -207,6 +201,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, "confgFragm", mFrag);
+        outState.putInt("onFrag", onFrag);
+    }
 
+    @Override
+    public void callETD(PendingDB pendingObj) {
+        FragmentManager mFragManager = getSupportFragmentManager();
+        EditPendDial epd=EditPendDial.getInstance(pendingObj);
+        epd.show(mFragManager, "Dialogue");
+    }
+
+    @Override
+    public void callBackETD() {
+        ((Pending)mFrag).callNotifyUpd();
     }
 }
