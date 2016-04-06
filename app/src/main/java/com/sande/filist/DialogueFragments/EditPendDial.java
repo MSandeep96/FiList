@@ -58,6 +58,7 @@ public class EditPendDial extends DialogFragment {
         setCancelable(true);
         mEditText=(EditText)rootView.findViewById(R.id.et_deif);
         mEditText.setText(mTitle);
+        mEditText.setSelection(mTitle.length());
         mEditText.addTextChangedListener(new TextWatcher() {
             boolean onClickSet=false;
             @Override
@@ -67,7 +68,7 @@ public class EditPendDial extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!(s.toString().equals(mTitle))){
+                if(!(s.toString().equals(mTitle)||s.toString().length()==0)){
                     if(onClickSet){
 
                     }else{

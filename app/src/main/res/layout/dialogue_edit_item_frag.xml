@@ -13,7 +13,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Item"
+            android:text="EDIT ITEM"
             android:fontFamily="roboto-condensed"
             android:textColor="@android:color/white"
             android:textSize="20sp"
@@ -32,7 +32,7 @@
             android:id="@+id/et_deif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Edit item"
+            android:hint="Edit Item"
             android:maxLines="8" />
     </android.support.design.widget.TextInputLayout>
 

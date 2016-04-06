@@ -1,6 +1,7 @@
 package com.sande.filist.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.sande.filist.Activity.AddDetailsActivity;
 import com.sande.filist.Interfaces.callEditTitleDialog;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
@@ -52,6 +54,14 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 @Override
                 public void onClick(View v) {
                     mActInterfaced.callETD(mResults.get(position));
+                }
+            });
+            ((PendingVH)holder).comIB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent mInte=new Intent(mContext, AddDetailsActivity.class);
+                    mInte.putExtra("longTime",mResults.get(position).getDateAdded());
+                    mContext.startActivity(mInte);
                 }
             });
         }
