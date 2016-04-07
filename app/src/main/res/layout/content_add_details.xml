@@ -17,18 +17,15 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <EditText
                 android:id="@+id/et_title_ada"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:hint="Add Short Title"
-                android:maxLength="15" />
-        </android.support.design.widget.TextInputLayout>
+                android:maxLength="40"
+                android:background="@null"
+                />
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
@@ -46,8 +43,8 @@
 
             <ImageButton
                 android:id="@+id/ib_ada"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:onClick="addImages"/>
 
             <android.support.v7.widget.RecyclerView
@@ -66,16 +63,13 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
             <EditText
                 android:id="@+id/et_desc_ada"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Add Description"/>
-        </android.support.design.widget.TextInputLayout>
+                android:hint="Add Description"
+                android:background="@null"
+                android:padding="10dp"/>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

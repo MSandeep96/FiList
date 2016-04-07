@@ -1,15 +1,26 @@
 package com.sande.filist.Fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import com.sande.filist.Adapters.CompletedAdapter;
+import com.sande.filist.Interfaces.SwipeableLeft;
 import com.sande.filist.R;
+import com.sande.filist.RealmClasses.CompletedDB;
+import com.sande.filist.RecyclerViewDecorations.SwipeLeft;
 import com.sande.filist.Utils.Utils;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 /**
@@ -17,7 +28,7 @@ import com.sande.filist.Utils.Utils;
  * Use the {@link Completed#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Completed extends Fragment {
+public class Completed extends Fragment implements SwipeableLeft {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +37,8 @@ public class Completed extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View mView;
+    private Context mContext;
 
 
     public Completed() {
@@ -66,4 +79,27 @@ public class Completed extends Fragment {
         return inflater.inflate(R.layout.fragment_completed, container, false);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext=getContext();
+        mView=getView();
+        if(mView!=null){
+            RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_fc);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+            Realm mRealm=Realm.getDefaultInstance();
+            RealmResults<CompletedDB> resultsCom=mRealm.where(CompletedDB.class).findAll();
+            CompletedAdapter mComAda=new CompletedAdapter(mContext,resultsCom);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.setAdapter(mComAda);
+            SwipeLeft mSwiper=new SwipeLeft(this);
+            ItemTouchHelper itemTouchHelper=new ItemTouchHelper(mSwiper);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }
+    }
+
+    @Override
+    public void swipedLeft(int position) {
+
+    }
 }

@@ -40,8 +40,6 @@ public class Pending extends Fragment implements SwipeableLeft {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Context mContext;
-    private View mView;
     private PendingAdapter mAdapter;
     private RealmResults<PendingDB> results;
     private RealmChangeListener mChanList=new RealmChangeListener() {
@@ -116,11 +114,11 @@ public class Pending extends Fragment implements SwipeableLeft {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext=getContext();
-        mView=getView();
-        if(mView!=null){
-            mLinear=(LinearLayout)mView.findViewById(R.id.ll_fp);
-            RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_fp);
+        Context mContext = getContext();
+        View mView = getView();
+        if(mView !=null){
+            mLinear=(LinearLayout) mView.findViewById(R.id.ll_fp);
+            RecyclerView mRecyclerView=(RecyclerView) mView.findViewById(R.id.rv_fp);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             mAdapter=new PendingAdapter(mContext,results);
             mRecyclerView.setAdapter(mAdapter);

@@ -7,16 +7,21 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by Sandeep on 30-Mar-16.
  */
 public class CompletedDB extends RealmObject {
+    @Required
     public String comTitle;
     public String comDesc;
+    @PrimaryKey
     public long comTimeComp;
     public PendingDB pendObj;
     public String imageURIs;
+    public String firstImage;
 
     public CompletedDB(String comTitle, String comDesc, PendingDB pendObj, long comTimeComp) {
         this.comTitle = comTitle;
@@ -26,6 +31,23 @@ public class CompletedDB extends RealmObject {
     }
 
     public CompletedDB() {
+    }
+
+    public void setImageUris(ArrayList<Uri> imgs){
+        firstImage=imgs.get(0).toString();
+        String imgUris="";
+        for(Uri x:imgs){
+            imgUris+=x.toString()+"*";
+        }
+    }
+
+    public ArrayList<Uri> getImageUris(){
+        ArrayList<Uri> imgs=new ArrayList<>();
+        String[] imgPaths=imageURIs.split("[*]");
+        for(String x:imgPaths){
+            imgs.add(Uri.parse(x));
+        }
+        return imgs;
     }
 
     public String getComDateFormatted(){

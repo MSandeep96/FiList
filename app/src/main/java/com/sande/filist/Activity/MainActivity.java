@@ -1,5 +1,8 @@
 package com.sande.filist.Activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,18 +21,21 @@ import android.view.MenuItem;
 import com.sande.filist.DialogueFragments.AddPendDial;
 import com.sande.filist.DialogueFragments.EditPendDial;
 import com.sande.filist.Fragments.*;
-import com.sande.filist.Interfaces.callEditTitleDialog;
+import com.sande.filist.Interfaces.PendingMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,callEditTitleDialog {
+        implements NavigationView.OnNavigationItemSelectedListener,PendingMainCallbackInterface {
 
+    private static final int ADD_DETAILS_TO_ITEM = 33;
     private int frag;
     private int onFrag;
     private FloatingActionButton fab;
     private Fragment mFrag;
+    private boolean isFirst=true;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +57,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (drawer != null) {
             drawer.addDrawerListener(toggle);
         }
-        toggle.syncState();
 
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
@@ -65,10 +70,10 @@ public class MainActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mFrag = getSupportFragmentManager().getFragment(savedInstanceState, "confgFragm");
-            onFrag = savedInstanceState.getInt("onFrag") - 1;
-            changeFrag(onFrag + 1, mFrag);
+            onFrag = savedInstanceState.getInt("onFrag");
+            changeFrag(onFrag, mFrag);
         } else {
-            onFrag = 2;//gets set to 0 after next instruction
+            onFrag = 0;
             mFrag = new Pending();
             changeFrag(0, mFrag);
         }
@@ -137,7 +142,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        mFrag = null;
         if (id == R.id.nav_pending) {
             frag = 0;
             mFrag = new Pending();
@@ -163,9 +167,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
     private void changeFrag(int frag, Fragment mFrag) {
-        if (frag == onFrag) {
+        if (frag == onFrag && !isFirst) {
             return;
+        }
+        if(isFirst){
+            isFirst=false;
         }
         onFrag = frag;
         FragmentManager mFragMan = getSupportFragmentManager();
@@ -201,8 +214,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        getSupportFragmentManager().putFragment(outState, "confgFragm", mFrag);
-        outState.putInt("onFrag", onFrag);
+        if(mFrag.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "confgFragm", mFrag);
+            outState.putInt("onFrag", onFrag);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -215,5 +236,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void callBackETD() {
         ((Pending)mFrag).callNotifyUpd();
+    }
+
+    @Override
+    public void callAddDetails(long dateAdded) {
+        Intent mInte=new Intent(this, AddDetailsActivity.class);
+        mInte.putExtra("longTime",dateAdded);
+        startActivityForResult(mInte,ADD_DETAILS_TO_ITEM);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==ADD_DETAILS_TO_ITEM && resultCode== Activity.RESULT_OK){
+            changeFrag(1,new Completed());
+        }
     }
 }

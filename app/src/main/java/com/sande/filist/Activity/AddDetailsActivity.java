@@ -20,7 +20,9 @@ import android.widget.ImageButton;
 import com.gun0912.tedpicker.Config;
 import com.gun0912.tedpicker.ImagePickerActivity;
 import com.sande.filist.Adapters.ADAImageAdapter;
+import com.sande.filist.Fragments.Completed;
 import com.sande.filist.R;
+import com.sande.filist.RealmClasses.CompletedDB;
 import com.sande.filist.RealmClasses.PendingDB;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import io.realm.Realm;
 public class AddDetailsActivity extends AppCompatActivity {
 
     private static final int INTENT_REQUEST_GET_IMAGES = 22;
+    private static final String SAVE_ARRAYLIST_OF_IMAGES = "SAVEIMAGES";
     private Realm mRealm;
     private PendingDB pendObj;
     private EditText titleEditText;
@@ -56,6 +59,9 @@ public class AddDetailsActivity extends AppCompatActivity {
         mRecView=(RecyclerView)findViewById(R.id.rv_ada);
         mRecView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         mAdapter=new ADAImageAdapter(this);
+        if(savedInstanceState!=null){
+            mAdapter.update(savedInstanceState.<Uri>getParcelableArrayList(SAVE_ARRAYLIST_OF_IMAGES));
+        }
         mRecView.setAdapter(mAdapter);
         mRecView.setHasFixedSize(true);
         mRecView.requestFocus();
@@ -71,10 +77,22 @@ public class AddDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==android.R.id.home){
+            this.setResult(Activity.RESULT_CANCELED);
             finish();
             return true;
         }else if (item.getItemId()==R.id.addToComp){
-
+            mRealm.beginTransaction();
+            long timeCompl=System.currentTimeMillis();
+            String title=titleEditText.getText().toString();
+            String desc=descEditText.getText().toString();
+            CompletedDB comObj=new CompletedDB(title,desc,pendObj,timeCompl);
+            comObj.setImageUris(mAdapter.getFinalImages());
+            mRealm.copyToRealmOrUpdate(comObj);
+            pendObj.removeFromRealm();
+            mRealm.commitTransaction();
+            this.setResult(Activity.RESULT_OK);
+            finish();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -98,5 +116,11 @@ public class AddDetailsActivity extends AppCompatActivity {
         ImagePickerActivity.setConfig(mConf);
         Intent intent = new Intent(this, ImagePickerActivity.class);
         startActivityForResult(intent, INTENT_REQUEST_GET_IMAGES);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(SAVE_ARRAYLIST_OF_IMAGES,mAdapter.getFinalImages());
     }
 }

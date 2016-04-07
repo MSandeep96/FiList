@@ -1,7 +1,6 @@
 package com.sande.filist.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.sande.filist.Activity.AddDetailsActivity;
-import com.sande.filist.Interfaces.callEditTitleDialog;
+import com.sande.filist.Interfaces.PendingMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
-
-import org.w3c.dom.Text;
-
-import java.util.zip.Inflater;
 
 import io.realm.RealmResults;
 
@@ -24,13 +18,13 @@ import io.realm.RealmResults;
  * Created by Sandeep on 30-Mar-16.
  */
 public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    callEditTitleDialog mActInterfaced;
+    PendingMainCallbackInterface mActInterfaced;
     Context mContext;
     LayoutInflater mInflater;
     private RealmResults<PendingDB> mResults;
     public PendingAdapter(Context context,RealmResults<PendingDB> results) {
         mContext=context;
-        mActInterfaced=(callEditTitleDialog)context;
+        mActInterfaced=(PendingMainCallbackInterface)context;
         mInflater= LayoutInflater.from(context);
         mResults=results;
     }
@@ -59,9 +53,7 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((PendingVH)holder).comIB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent mInte=new Intent(mContext, AddDetailsActivity.class);
-                    mInte.putExtra("longTime",mResults.get(position).getDateAdded());
-                    mContext.startActivity(mInte);
+                    mActInterfaced.callAddDetails(mResults.get(position).getDateAdded());
                 }
             });
         }

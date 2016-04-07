@@ -13,12 +13,11 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.sande.filist.Interfaces.callEditTitleDialog;
+import com.sande.filist.Interfaces.PendingMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
 
 import io.realm.Realm;
-import io.realm.RealmObject;
 
 /**
  * Created by Sandeep on 05-Apr-16.
@@ -30,7 +29,7 @@ public class EditPendDial extends DialogFragment {
     private Button mNegButton;
     private long mTimeAdded;
     private String mTitle;
-    private callEditTitleDialog mActiInterfaced;
+    private PendingMainCallbackInterface mActiInterfaced;
 
 
     public static EditPendDial getInstance(PendingDB obj){
@@ -47,7 +46,7 @@ public class EditPendDial extends DialogFragment {
         super.onCreate(savedInstanceState);
         mTimeAdded=getArguments().getLong("longTime");
         mTitle=getArguments().getString("title");
-        mActiInterfaced=(callEditTitleDialog)getContext();
+        mActiInterfaced=(PendingMainCallbackInterface)getContext();
     }
 
     @Nullable
