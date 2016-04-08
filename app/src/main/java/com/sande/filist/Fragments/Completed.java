@@ -3,6 +3,7 @@ package com.sande.filist.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
 
 import com.sande.filist.Adapters.CompletedAdapter;
 import com.sande.filist.Interfaces.SwipeableLeft;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.CompletedDB;
+import com.sande.filist.RecyclerViewDecorations.Divider;
 import com.sande.filist.RecyclerViewDecorations.SwipeLeft;
 import com.sande.filist.Utils.Utils;
 
@@ -39,6 +42,11 @@ public class Completed extends Fragment implements SwipeableLeft {
     private String mParam2;
     private View mView;
     private Context mContext;
+    private CompletedAdapter mComAda;
+    private Realm mRealm;
+    private LinearLayout mLinearLay;
+    private RealmResults<CompletedDB> resultsCom;
+    private Snackbar mSnack;
 
 
     public Completed() {
@@ -70,6 +78,8 @@ public class Completed extends Fragment implements SwipeableLeft {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mRealm = Realm.getDefaultInstance();
+        resultsCom = mRealm.where(CompletedDB.class).findAll();
     }
 
     @Override
@@ -82,24 +92,58 @@ public class Completed extends Fragment implements SwipeableLeft {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mContext=getContext();
-        mView=getView();
-        if(mView!=null){
-            RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_fc);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
-            Realm mRealm=Realm.getDefaultInstance();
-            RealmResults<CompletedDB> resultsCom=mRealm.where(CompletedDB.class).findAll();
-            CompletedAdapter mComAda=new CompletedAdapter(mContext,resultsCom);
-            mRecyclerView.setHasFixedSize(true);
+        mContext = getContext();
+        mView = getView();
+        if (mView != null) {
+            mLinearLay = (LinearLayout) mView.findViewById(R.id.ll_fc);
+            RecyclerView mRecyclerView = (RecyclerView) mView.findViewById(R.id.rv_fc);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            mComAda = new CompletedAdapter(mContext, resultsCom);
             mRecyclerView.setAdapter(mComAda);
-            SwipeLeft mSwiper=new SwipeLeft(this);
-            ItemTouchHelper itemTouchHelper=new ItemTouchHelper(mSwiper);
+            mRecyclerView.setHasFixedSize(true);
+            mRecyclerView.addItemDecoration(new Divider(mContext, LinearLayout.VERTICAL));
+            SwipeLeft mSwiper = new SwipeLeft(this);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSwiper);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
         }
     }
 
     @Override
-    public void swipedLeft(int position) {
+    public void onStop() {
+        super.onStop();
+        if (mSnack != null) {
+            if (mSnack.isShown()) {
+                mSnack.dismiss();
+            }
+        }
+    }
 
+    @Override
+    public void swipedLeft(int position) {
+        mComAda.notifyItemRemoved(position);
+        if (mRealm.isInTransaction()) {
+            mRealm.commitTransaction();
+        }
+        mRealm.beginTransaction();
+        resultsCom.get(position).removeFromRealm();
+        mSnack = Snackbar.make(mLinearLay, "Deleted", Snackbar.LENGTH_LONG);
+        mSnack.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mRealm.isInTransaction())
+                    mRealm.cancelTransaction();
+                mComAda.notifyDataSetChanged();
+            }
+        });
+        mSnack.setCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event != DISMISS_EVENT_ACTION) {
+                    if (mRealm.isInTransaction())
+                        mRealm.commitTransaction();
+                }
+            }
+        });
+        mSnack.show();
     }
 }

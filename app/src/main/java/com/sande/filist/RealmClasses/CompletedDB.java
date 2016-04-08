@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -41,13 +42,10 @@ public class CompletedDB extends RealmObject {
         }
     }
 
-    public ArrayList<Uri> getImageUris(){
-        ArrayList<Uri> imgs=new ArrayList<>();
+    public ArrayList<String> getImageUris(){
+        ArrayList<String> imgs=new ArrayList<>();
         String[] imgPaths=imageURIs.split("[*]");
-        for(String x:imgPaths){
-            imgs.add(Uri.parse(x));
-        }
-        return imgs;
+        return (ArrayList<String>)Arrays.asList(imgPaths);
     }
 
     public String getComDateFormatted(){

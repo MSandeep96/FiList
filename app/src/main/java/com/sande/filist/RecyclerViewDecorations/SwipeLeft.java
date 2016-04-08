@@ -7,6 +7,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.sande.filist.Adapters.CompletedAdapter;
 import com.sande.filist.Adapters.PendingAdapter;
 import com.sande.filist.Interfaces.SwipeableLeft;
 import com.sande.filist.RealmClasses.PendingDB;
@@ -46,21 +47,21 @@ public class SwipeLeft extends ItemTouchHelper.Callback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        if(viewHolder instanceof PendingAdapter.PendingVH /*|| viewHolder instanceof CompletedAdapter.mComViewHolder*/){
+        if(viewHolder instanceof PendingAdapter.PendingVH || viewHolder instanceof CompletedAdapter.ComViewHolder){
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        if (viewHolder instanceof PendingAdapter.PendingVH /*|| viewHolder instanceof CompletedAdapter.mComViewHolder*/){
+        if (viewHolder instanceof PendingAdapter.PendingVH || viewHolder instanceof CompletedAdapter.ComViewHolder){
             super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        if (viewHolder instanceof PendingAdapter.PendingVH /*|| viewHolder instanceof CompletedAdapter.mComViewHolder*/){
+        if (viewHolder instanceof PendingAdapter.PendingVH || viewHolder instanceof CompletedAdapter.ComViewHolder){
             mSwipedLeft.swipedLeft(viewHolder.getLayoutPosition());
         }
 
