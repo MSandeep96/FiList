@@ -1,4 +1,4 @@
-package com.sande.filist.Fragments;
+package com.sande.filist.Fragments.MainActivityFragments;
 
 
 import android.os.Bundle;
@@ -6,18 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 
 import com.sande.filist.R;
-import com.sande.filist.Utils.Utils;
-
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Inspiration#newInstance} factory method to
+ * Use the {@link About_Us#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Inspiration extends Fragment {
+public class About_Us extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,7 +25,7 @@ public class Inspiration extends Fragment {
     private String mParam2;
 
 
-    public Inspiration() {
+    public About_Us() {
         // Required empty public constructor
     }
 
@@ -38,17 +35,18 @@ public class Inspiration extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Inspiration.
+     * @return A new instance of fragment About_Us.
      */
     // TODO: Rename and change types and number of parameters
-    public static Inspiration newInstance(String param1, String param2) {
-        Inspiration fragment = new Inspiration();
+    public static About_Us newInstance(String param1, String param2) {
+        About_Us fragment = new About_Us();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
+
 
 
     @Override
@@ -64,7 +62,7 @@ public class Inspiration extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inspiration, container, false);
+        return inflater.inflate(R.layout.fragment_about__us, container, false);
     }
 
 }

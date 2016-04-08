@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bb_task"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Overview"
+        android:checked="true"/>
+    <item
+        android:id="@+id/bb_desc"
+        android:icon="@drawable/ic_menu_slideshow"
+        android:title="Description" />
+    <item
+        android:id="@+id/bb_images"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="Images" />
+</menu>

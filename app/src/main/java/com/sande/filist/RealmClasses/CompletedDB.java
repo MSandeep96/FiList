@@ -42,7 +42,7 @@ public class CompletedDB extends RealmObject {
         }
     }
 
-    public ArrayList<String> getImageUris(){
+    public ArrayList<String> getImageStrings(){
         ArrayList<String> imgs=new ArrayList<>();
         String[] imgPaths=imageURIs.split("[*]");
         return (ArrayList<String>)Arrays.asList(imgPaths);

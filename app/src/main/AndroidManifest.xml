@@ -3,7 +3,9 @@
     package="com.sande.filist">
 
     <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -34,9 +36,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sande.filist.Activity.MainActivity" />
         </activity>
-        <activity android:name="com.gun0912.tedpicker.ImagePickerActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.gun0912.tedpicker.ImagePickerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ViewCompleted"
+            android:label="@string/title_activity_view_completed"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sande.filist.Activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

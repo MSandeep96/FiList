@@ -1,7 +1,5 @@
 package com.sande.filist.RealmClasses;
 
-import com.sande.filist.Fragments.Pending;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,13 +14,13 @@ public class PendingDB extends RealmObject {
     @PrimaryKey
     private long dateAdded;
     @Required
-    private String title;
+    private String task;
 
     public PendingDB(){}
 
-    public PendingDB(long dateAdded, String title) {
+    public PendingDB(long dateAdded, String task) {
         this.dateAdded = dateAdded;
-        this.title = title;
+        this.task = task;
     }
 
     public long getDateAdded() {
@@ -33,12 +31,12 @@ public class PendingDB extends RealmObject {
         this.dateAdded = dateAdded;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTask() {
+        return task;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTask(String task) {
+        this.task = task;
     }
 
     public String getDateFormatted(){

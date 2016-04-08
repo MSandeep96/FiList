@@ -13,7 +13,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.sande.filist.Interfaces.PendingMainCallbackInterface;
+import com.sande.filist.Interfaces.AdaptersMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
 
@@ -29,14 +29,14 @@ public class EditPendDial extends DialogFragment {
     private Button mNegButton;
     private long mTimeAdded;
     private String mTitle;
-    private PendingMainCallbackInterface mActiInterfaced;
+    private AdaptersMainCallbackInterface mActiInterfaced;
 
 
     public static EditPendDial getInstance(PendingDB obj){
         EditPendDial epd=new EditPendDial();
         Bundle args=new Bundle();
         args.putLong("longTime",obj.getDateAdded());//pun
-        args.putString("title",obj.getTitle());
+        args.putString("title",obj.getTask());
         epd.setArguments(args);
         return epd;
     }
@@ -46,7 +46,7 @@ public class EditPendDial extends DialogFragment {
         super.onCreate(savedInstanceState);
         mTimeAdded=getArguments().getLong("longTime");
         mTitle=getArguments().getString("title");
-        mActiInterfaced=(PendingMainCallbackInterface)getContext();
+        mActiInterfaced=(AdaptersMainCallbackInterface)getContext();
     }
 
     @Nullable
@@ -100,9 +100,9 @@ public class EditPendDial extends DialogFragment {
                 if (mRealm.isInTransaction())
                     mRealm.commitTransaction();
                 mRealm.beginTransaction();
-                mPendObj.setTitle(title);
+                mPendObj.setTask(title);
                 mRealm.commitTransaction();
-                mActiInterfaced.callBackETD();
+                mActiInterfaced.callDataChangedPending();
                 dismiss();
             }
         });

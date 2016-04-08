@@ -20,14 +20,17 @@ import android.view.MenuItem;
 
 import com.sande.filist.DialogueFragments.AddPendDial;
 import com.sande.filist.DialogueFragments.EditPendDial;
-import com.sande.filist.Fragments.*;
-import com.sande.filist.Interfaces.PendingMainCallbackInterface;
+import com.sande.filist.Fragments.MainActivityFragments.About_Us;
+import com.sande.filist.Fragments.MainActivityFragments.Completed;
+import com.sande.filist.Fragments.MainActivityFragments.Inspiration;
+import com.sande.filist.Fragments.MainActivityFragments.Pending;
+import com.sande.filist.Interfaces.AdaptersMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,PendingMainCallbackInterface {
+        implements NavigationView.OnNavigationItemSelectedListener,AdaptersMainCallbackInterface {
 
     private static final int ADD_DETAILS_TO_ITEM = 33;
     private int frag;
@@ -168,6 +171,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void compCallViewCompletedActivity(long dateCompleted) {
+        Intent viewComp=new Intent(this,ViewCompleted.class);
+        viewComp.putExtra("callCompleted",dateCompleted);
+        startActivity(viewComp);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         toggle.syncState();
@@ -227,19 +237,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void callETD(PendingDB pendingObj) {
+    public void callEditDialog(PendingDB pendingObj) {
         FragmentManager mFragManager = getSupportFragmentManager();
         EditPendDial epd=EditPendDial.getInstance(pendingObj);
         epd.show(mFragManager, "Dialogue");
     }
 
     @Override
-    public void callBackETD() {
+    public void callDataChangedPending() {
         ((Pending)mFrag).callNotifyUpd();
     }
 
     @Override
-    public void callAddDetails(long dateAdded) {
+    public void callAddDetailsActivity(long dateAdded) {
         Intent mInte=new Intent(this, AddDetailsActivity.class);
         mInte.putExtra("longTime",dateAdded);
         startActivityForResult(mInte,ADD_DETAILS_TO_ITEM);
