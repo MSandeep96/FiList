@@ -42,7 +42,7 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof PendingVH){
-            ((PendingVH)holder).titleTV.setText(mResults.get(position).getTask());
+            ((PendingVH)holder).titleTV.setText(mResults.get(position).task);
             ((PendingVH)holder).dateTV.setText(mResults.get(position).getDateFormatted());
             ((PendingVH)holder).editIB.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -53,7 +53,7 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((PendingVH)holder).comIB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mActInterfaced.callAddDetailsActivity(mResults.get(position).getDateAdded());
+                    mActInterfaced.callAddDetailsActivity(mResults.get(position).dateAdded);
                 }
             });
         }

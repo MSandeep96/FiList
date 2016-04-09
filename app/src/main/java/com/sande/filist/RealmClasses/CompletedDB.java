@@ -20,42 +20,51 @@ public class CompletedDB extends RealmObject {
     public String comDesc;
     @PrimaryKey
     public long comTimeComp;
-    public PendingDB pendObj;
     public String imageURIs;
     public String firstImage;
+    public long dateAdded;
+    public String task;
 
-    public CompletedDB(String comTitle, String comDesc, PendingDB pendObj, long comTimeComp) {
-        this.comTitle = comTitle;
-        this.comDesc = comDesc;
-        this.pendObj = pendObj;
-        this.comTimeComp = comTimeComp;
-    }
 
     public CompletedDB() {
     }
 
-    public void setImageUris(ArrayList<Uri> imgs){
-        firstImage=imgs.get(0).toString();
-        String imgUris="";
-        for(Uri x:imgs){
-            imgUris+=x.toString()+"*";
+    public CompletedDB(String comTitle, String comDesc, long comTimeComp, long dateAdded, String task) {
+        this.comTitle = comTitle;
+        this.comDesc = comDesc;
+        this.comTimeComp = comTimeComp;
+        this.dateAdded = dateAdded;
+        this.task = task;
+    }
+
+    public void setImageUris(ArrayList<Uri> imgs) {
+        firstImage = imgs.get(0).toString();
+        String imgUris = "";
+        for (Uri x : imgs) {
+            imgUris += x.toString() + "*";
         }
+        imageURIs=imgUris;
     }
 
-    public ArrayList<String> getImageStrings(){
-        ArrayList<String> imgs=new ArrayList<>();
-        String[] imgPaths=imageURIs.split("[*]");
-        return (ArrayList<String>)Arrays.asList(imgPaths);
+    public ArrayList<String> getImageStrings() {
+        if(imageURIs!=null) {
+            String[] imgPaths = imageURIs.split("[*]");
+            return new ArrayList<String>(Arrays.asList(imgPaths));
+        }
+        return null;
     }
 
-    public String getComDateFormatted(){
+    public String getComDateFormatted() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy  HH:mm");
         Date resultdate = new Date(comTimeComp);
         return sdf.format(resultdate);
     }
 
-    public String getPendDateFormatted(){
-        return pendObj.getDateFormatted();
+    public String getPendDateFormatted() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy  HH:mm");
+        Date resultdate = new Date(dateAdded);
+        return sdf.format(resultdate);
+
     }
 
 }

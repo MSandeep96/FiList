@@ -35,8 +35,8 @@ public class EditPendDial extends DialogFragment {
     public static EditPendDial getInstance(PendingDB obj){
         EditPendDial epd=new EditPendDial();
         Bundle args=new Bundle();
-        args.putLong("longTime",obj.getDateAdded());//pun
-        args.putString("title",obj.getTask());
+        args.putLong("longTime",obj.dateAdded);//pun
+        args.putString("title",obj.task);
         epd.setArguments(args);
         return epd;
     }

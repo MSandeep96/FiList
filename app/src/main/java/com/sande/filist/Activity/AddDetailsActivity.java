@@ -37,6 +37,7 @@ public class AddDetailsActivity extends AppCompatActivity {
     private ImageButton mImageBut;
     private RecyclerView mRecView;
     private ADAImageAdapter mAdapter;
+    public static final String CALL_ADD_DETAILS = "CALL_ADD_DETAILS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class AddDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Details");
         Intent inte=getIntent();
-        long ident=inte.getLongExtra("longTime",0);
+        long ident=inte.getLongExtra(CALL_ADD_DETAILS,0);
         mRealm=Realm.getDefaultInstance();
         pendObj=mRealm.where(PendingDB.class).equalTo("dateAdded",ident).findFirst();
         titleEditText=(EditText)findViewById(R.id.et_title_ada);
@@ -82,7 +83,7 @@ public class AddDetailsActivity extends AppCompatActivity {
             long timeCompl=System.currentTimeMillis();
             String title=titleEditText.getText().toString();
             String desc=descEditText.getText().toString();
-            CompletedDB comObj=new CompletedDB(title,desc,pendObj,timeCompl);
+            CompletedDB comObj=new CompletedDB(title,desc,timeCompl,pendObj.dateAdded,pendObj.task);
             comObj.setImageUris(mAdapter.getFinalImages());
             mRealm.copyToRealmOrUpdate(comObj);
             pendObj.removeFromRealm();

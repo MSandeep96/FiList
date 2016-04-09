@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class ImagesCompletedFragment extends Fragment {
         mView=getView();
         if(mView!=null){
             RecyclerView mRecycler=(RecyclerView)mView.findViewById(R.id.rv_fic);
-            mRecycler.setLayoutManager(new StaggeredGridLayoutManager(StaggeredGridLayoutManager.VERTICAL,2));
+            mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
             ViewCompletedImageAdapter mAdapter=new ViewCompletedImageAdapter(mContext,mComObj.getImageStrings());
             mRecycler.setAdapter(mAdapter);
         }

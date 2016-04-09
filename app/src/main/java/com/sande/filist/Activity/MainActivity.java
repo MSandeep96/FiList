@@ -27,6 +27,7 @@ import com.sande.filist.Fragments.MainActivityFragments.Pending;
 import com.sande.filist.Interfaces.AdaptersMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
+import com.sande.filist.Utils.ProjectConstants;
 
 
 public class MainActivity extends AppCompatActivity
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void compCallViewCompletedActivity(long dateCompleted) {
         Intent viewComp=new Intent(this,ViewCompleted.class);
-        viewComp.putExtra("callCompleted",dateCompleted);
+        viewComp.putExtra(ViewCompleted.CALL_FRAGS,dateCompleted);
         startActivity(viewComp);
     }
 
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void callAddDetailsActivity(long dateAdded) {
         Intent mInte=new Intent(this, AddDetailsActivity.class);
-        mInte.putExtra("longTime",dateAdded);
+        mInte.putExtra(AddDetailsActivity.CALL_ADD_DETAILS,dateAdded);
         startActivityForResult(mInte,ADD_DETAILS_TO_ITEM);
     }
 

@@ -17,18 +17,19 @@ import com.sande.filist.Fragments.ViewCompletedFragments.DescriptionFragment;
 import com.sande.filist.Fragments.ViewCompletedFragments.ImagesCompletedFragment;
 import com.sande.filist.Fragments.ViewCompletedFragments.TaskFragment;
 import com.sande.filist.R;
+import com.sande.filist.Utils.ProjectConstants;
 
 public class ViewCompleted extends AppCompatActivity {
 
     private BottomBar mBottomBar;
-
+    public static final String CALL_FRAGS = " CALL_FRAGS";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_completed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final long dateAdded=getIntent().getLongExtra("callCompeted",0);
+        final long dateAdded=getIntent().getLongExtra(CALL_FRAGS,0);
 
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.setItemsFromMenu(R.menu.bottombar_menu, new OnMenuTabClickListener() {
@@ -38,9 +39,9 @@ public class ViewCompleted extends AppCompatActivity {
                 if (resId == R.id.bb_task) {
                     mFrag=TaskFragment.newInstance(dateAdded);
                 }else if(resId==R.id.bb_desc){
-                    mFrag=new ImagesCompletedFragment();
+                    mFrag=DescriptionFragment.newInstance(dateAdded);
                 }else{
-                    mFrag=new DescriptionFragment();
+                    mFrag=ImagesCompletedFragment.newInstance(dateAdded);
                 }
                 FragmentManager mFragMan=getSupportFragmentManager();
                 FragmentTransaction mFragTrans=mFragMan.beginTransaction();

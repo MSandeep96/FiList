@@ -12,27 +12,15 @@ import io.realm.annotations.Required;
  */
 public class PendingDB extends RealmObject {
     @PrimaryKey
-    private long dateAdded;
+    public long dateAdded;
     @Required
-    private String task;
+    public String task;
 
     public PendingDB(){}
 
     public PendingDB(long dateAdded, String task) {
         this.dateAdded = dateAdded;
         this.task = task;
-    }
-
-    public long getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(long dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public String getTask() {
-        return task;
     }
 
     public void setTask(String task) {

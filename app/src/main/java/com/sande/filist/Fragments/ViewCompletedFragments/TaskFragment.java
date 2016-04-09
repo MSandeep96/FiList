@@ -60,7 +60,7 @@ public class TaskFragment extends Fragment {
             TextView mTitle=(TextView) mView.findViewById(R.id.title_tv_ftask);
             mTitle.setText(comObj.comTitle);
             TextView mTask=(TextView)mView.findViewById(R.id.task_tv_ftask);
-            mTask.setText(comObj.pendObj.getTask());
+            mTask.setText(comObj.task);
         }
     }
 }
