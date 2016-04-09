@@ -3,24 +3,31 @@ package com.sande.filist.Fragments.MainActivityFragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.sande.filist.Adapters.InstaAdapter;
 import com.sande.filist.Network.VolleySingleton;
+import com.sande.filist.Pojo.InstaFeed;
 import com.sande.filist.R;
-import com.sande.filist.Utils.APIConstants;
+import com.sande.filist.Interfaces.APIConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,6 +40,7 @@ public class Inspiration extends Fragment implements APIConstants {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String ROTATE_INSTA ="RotateInsta";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -40,6 +48,9 @@ public class Inspiration extends Fragment implements APIConstants {
     private VolleySingleton iVolSing;
     private RequestQueue iReqQue;
     private Context mContext;
+    private ArrayList<InstaFeed> feed=new ArrayList<>();
+    private InstaAdapter mInsta;
+    private ProgressBar mProgressBar;
 
     public Inspiration() {
         // Required empty public constructor
@@ -72,12 +83,17 @@ public class Inspiration extends Fragment implements APIConstants {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mContext=getContext();
+    }
+
+    private void makeRequest(){
         iVolSing= VolleySingleton.getInstance();
         iReqQue=iVolSing.getRequestQueue();
         JsonObjectRequest req=new JsonObjectRequest(Request.Method.GET, getReqUrl(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                parseJsonObject(response);
+                mProgressBar.setVisibility(View.GONE);
+                feed=parseJsonObject(response);
+                mInsta.setmFeed(feed);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -88,38 +104,65 @@ public class Inspiration extends Fragment implements APIConstants {
         iReqQue.add(req);
     }
 
-    private void parseJsonObject(JSONObject response) {
-        StringBuilder data=new StringBuilder();
+    private ArrayList<InstaFeed> parseJsonObject(JSONObject response) {
+        ArrayList<InstaFeed> insFeed=new ArrayList<>();
         if(response==null || response.length()==0){
-            return;
+            return null;
         }
         try {
             if(response.has(KEY_DATA)) {
                 JSONArray arrayData = response.getJSONArray(KEY_DATA);
                 for (int i=0;i<arrayData.length();i++){
                     JSONObject currentImage=arrayData.getJSONObject(i);
-                    String filter=currentImage.getString("filter");
-                    data.append(filter+"\n");
+                    JSONObject images=currentImage.getJSONObject(KEY_IMAGES);
+                    JSONObject stand=images.getJSONObject(KEY_STANDARD);
+                    String sturl=stand.getString(KEY_URL);
+                    JSONObject caption=currentImage.getJSONObject(KEY_CAPTION);
+                    String capText=caption.getString(KEY_TEXT);
+                    JSONObject from=caption.getJSONObject(KEY_FROM);
+                    String userName=from.getString(KEY_USERNAME);
+                    String profPic=from.getString(KEY_PROF);
+                    String postID=currentImage.getString(KEY_ID);
+                    InstaFeed mIns=new InstaFeed(sturl,capText,userName,profPic,postID);
+                    insFeed.add(mIns);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Toast.makeText(mContext,data.toString(), Toast.LENGTH_LONG).show();
+        return insFeed;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inspiration, container, false);
+        View mView = inflater.inflate(R.layout.fragment_inspiration, container, false);
+        mProgressBar=(ProgressBar)mView.findViewById(R.id.pb_fi);
+        RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_in);
+        mInsta=new InstaAdapter(mContext);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(mInsta);
+        if(savedInstanceState!=null){
+            mProgressBar.setVisibility(View.GONE);
+            feed=savedInstanceState.getParcelableArrayList(ROTATE_INSTA);
+            mInsta.setmFeed(feed);
+        }else{
+            makeRequest();
+        }
+        return mView;
     }
 
     private String getReqUrl(){
-        //// TODO: 09-Apr-16 Maybe spanner with other tags
+        //// TODO: 09-Apr-16 Maybe spanner with other tags or user specifies keyword in settings fragment
         String url=URL_INSTA.replace("{}","bucketlist");//tag to find in instagram
         url+=ACCESS_TOKEN;
         return url;
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(ROTATE_INSTA,feed);
+    }
 }

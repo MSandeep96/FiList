@@ -80,31 +80,6 @@ public class MainActivity extends AppCompatActivity
             mFrag = new Pending();
             changeFrag(0, mFrag);
         }
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                mFrag = getSupportFragmentManager().findFragmentByTag("visible_frag");
-                if (mFrag instanceof Pending) {
-                    setTopBar(0);
-                    onFrag = 0;
-                    fab.show();
-                } else if (mFrag instanceof Completed) {
-                    setTopBar(1);
-                    onFrag = 1;
-                    fab.hide();
-                } else if (mFrag instanceof Inspiration) {
-                    setTopBar(2);
-                    onFrag = 2;
-                    fab.hide();
-                } else {
-                    setTopBar(3);
-                    onFrag = 3;
-                    fab.hide();
-                }
-                assert navigationView != null;
-                navigationView.getMenu().getItem(onFrag).setChecked(true);
-            }
-        });
     }
 
     @Override
@@ -193,13 +168,19 @@ public class MainActivity extends AppCompatActivity
         onFrag = frag;
         FragmentManager mFragMan = getSupportFragmentManager();
         FragmentTransaction mFragTrans = mFragMan.beginTransaction();
-        mFragTrans.setCustomAnimations(0, 0, R.anim.pop_enter, R.anim.pop_exit);
-        mFragTrans.replace(R.id.fl_cm, mFrag, "visible_frag");
-        if (frag != 0) {
-            mFragTrans.addToBackStack(null);
-        } else {
-            mFragMan.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        // TODO: 10-Apr-16 Figure out appropriate animations also add dialog animations
+        switch (frag){
+            case 0:
+                mFragTrans.setCustomAnimations(0,R.anim.pop_exit,0,0);
+                break;
+            case 1:
+                mFragTrans.setCustomAnimations(R.anim.enter, R.anim.pop_exit,0,0);
+                break;
+            case 2:
+                mFragTrans.setCustomAnimations(R.anim.enter,0,0,0);
+                break;
         }
+        mFragTrans.replace(R.id.fl_cm, mFrag, "visible_frag");
         setTopBar(frag);
         mFragTrans.commit();
     }
