@@ -2,14 +2,11 @@ package com.sande.filist.Activity;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
@@ -17,7 +14,6 @@ import com.sande.filist.Fragments.ViewCompletedFragments.DescriptionFragment;
 import com.sande.filist.Fragments.ViewCompletedFragments.ImagesCompletedFragment;
 import com.sande.filist.Fragments.ViewCompletedFragments.TaskFragment;
 import com.sande.filist.R;
-import com.sande.filist.Utils.ProjectConstants;
 
 public class ViewCompleted extends AppCompatActivity {
 

@@ -27,7 +27,6 @@ import com.sande.filist.Fragments.MainActivityFragments.Pending;
 import com.sande.filist.Interfaces.AdaptersMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
-import com.sande.filist.Utils.ProjectConstants;
 
 
 public class MainActivity extends AppCompatActivity
