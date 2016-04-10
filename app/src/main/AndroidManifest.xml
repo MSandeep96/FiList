@@ -9,7 +9,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".RealmInitApp"
@@ -43,6 +43,15 @@
         <activity
             android:name=".Activity.ViewCompleted"
             android:label="@string/title_activity_view_completed"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sande.filist.Activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:label="@string/title_activity_setting"
             android:parentActivityName=".Activity.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data

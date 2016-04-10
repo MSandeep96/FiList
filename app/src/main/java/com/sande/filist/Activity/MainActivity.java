@@ -20,7 +20,6 @@ import android.view.MenuItem;
 
 import com.sande.filist.DialogueFragments.AddPendDial;
 import com.sande.filist.DialogueFragments.EditPendDial;
-import com.sande.filist.Fragments.MainActivityFragments.About_Us;
 import com.sande.filist.Fragments.MainActivityFragments.Completed;
 import com.sande.filist.Fragments.MainActivityFragments.Inspiration;
 import com.sande.filist.Fragments.MainActivityFragments.Pending;
@@ -109,6 +108,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent inte=new Intent(this,SettingActivity.class);
+            startActivity(inte);
             return true;
         }
 
@@ -131,10 +132,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_inspire) {
             frag = 2;
             mFrag = new Inspiration();
-            fab.hide();
-        } else if (id == R.id.nav_aboutus) {
-            frag = 3;
-            mFrag = new About_Us();
             fab.hide();
         }
         changeFrag(frag, mFrag);

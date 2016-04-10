@@ -17,4 +17,6 @@ public interface APIConstants {
     String KEY_URL="url";
     String KEY_TEXT="text";
     String KEY_ID="id";
+    String KEY_PAGINATION="pagination";
+    String KEY_NEXT_URL="next_url";
 }

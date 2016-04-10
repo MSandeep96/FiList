@@ -84,6 +84,17 @@ public class InstaAdapter extends RecyclerView.Adapter<InstaAdapter.InstaViewHol
         return mFeed.size();
     }
 
+    public void addmFeed(ArrayList<InstaFeed> feed) {
+        if(mFeed!=null) {
+            int k = mFeed.size();
+            mFeed.addAll(feed);
+            notifyItemRangeChanged(k, feed.size());
+        }else {
+            mFeed=feed;
+            notifyItemRangeChanged(0,feed.size());
+        }
+    }
+
     static class InstaViewHolder extends RecyclerView.ViewHolder{
         ImageView mProf;
         TextView mUser;

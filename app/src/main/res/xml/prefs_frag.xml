@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Sort">
+        <ListPreference
+            android:key="sort_pending"
+            android:title="Pending SortOrder"
+            android:dialogTitle="Pending Sort"/>
+        <ListPreference
+            android:key="sort_completed"
+            android:title="Completed SortOrder"
+            android:dialogTitle="Completed Sort"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Instagram">
+        <EditTextPreference
+            android:key="tag_insta"
+            android:title="Inspiration tag"
+            android:summary="Tag to search Instagram for"
+            android:dialogTitle="SearchTag"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="About Us">
+        <Preference
+            android:title="Version"
+            android:defaultValue="1.0.0"/>
+        <Preference
+            android:title="Developer"
+            android:defaultValue="Sandeep"/>
+        <Preference
+            android:title="Source Code"
+            android:defaultValue="Github link"/>
+    </PreferenceCategory>
+</PreferenceScreen>

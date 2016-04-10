@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.android.volley.Request;
@@ -27,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -51,6 +53,8 @@ public class Inspiration extends Fragment implements APIConstants {
     private ArrayList<InstaFeed> feed=new ArrayList<>();
     private InstaAdapter mInsta;
     private ProgressBar mProgressBar;
+    private String nextUrl;
+    private boolean loading=false;
 
     public Inspiration() {
         // Required empty public constructor
@@ -84,17 +88,18 @@ public class Inspiration extends Fragment implements APIConstants {
         }
         mContext=getContext();
         setRetainInstance(true);
-    }
-
-    private void makeRequest(){
         iVolSing= VolleySingleton.getInstance();
         iReqQue=iVolSing.getRequestQueue();
-        JsonObjectRequest req=new JsonObjectRequest(Request.Method.GET, getReqUrl(), null, new Response.Listener<JSONObject>() {
+    }
+
+    private void makeRequest(String urlToInsta){
+        JsonObjectRequest req=new JsonObjectRequest(Request.Method.GET, urlToInsta, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressBar.setVisibility(View.GONE);
                 feed=parseJsonObject(response);
-                mInsta.setmFeed(feed);
+                mInsta.addmFeed(feed);
+                loading=false;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -112,6 +117,8 @@ public class Inspiration extends Fragment implements APIConstants {
         }
         try {
             if(response.has(KEY_DATA)) {
+                JSONObject pagination=response.getJSONObject(KEY_PAGINATION);
+                nextUrl=pagination.getString(KEY_NEXT_URL);
                 JSONArray arrayData = response.getJSONArray(KEY_DATA);
                 for (int i=0;i<arrayData.length();i++){
                     JSONObject currentImage=arrayData.getJSONObject(i);
@@ -134,21 +141,42 @@ public class Inspiration extends Fragment implements APIConstants {
         return insFeed;
     }
 
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_inspiration, container, false);
         mProgressBar=(ProgressBar)mView.findViewById(R.id.pb_fi);
-        RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_in);
+        final RecyclerView mRecyclerView=(RecyclerView)mView.findViewById(R.id.rv_in);
         mInsta=new InstaAdapter(mContext);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        final LinearLayoutManager mLineMan=new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLineMan);
         mRecyclerView.setAdapter(mInsta);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy>0){
+                    //scrolled down
+                    visibleItemCount=mLineMan.getChildCount();
+                    totalItemCount=mLineMan.getItemCount();
+                    pastVisiblesItems=mLineMan.findFirstVisibleItemPosition();
+                    if((visibleItemCount+pastVisiblesItems)>=totalItemCount){
+                        if(!loading) {
+                            makeRequest(nextUrl);
+                            loading = true;
+                        }
+                    }
+                }
+            }
+        });
         if(savedInstanceState!=null){
             mProgressBar.setVisibility(View.GONE);
             feed=savedInstanceState.getParcelableArrayList(ROTATE_INSTA);
             mInsta.setmFeed(feed);
         }else{
-            makeRequest();
+            makeRequest(getReqUrl());
         }
         return mView;
     }
