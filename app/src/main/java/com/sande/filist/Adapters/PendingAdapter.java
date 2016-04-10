@@ -2,12 +2,16 @@ package com.sande.filist.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.sande.filist.Interfaces.AdaptersMainCallbackInterface;
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.PendingDB;
@@ -22,11 +26,22 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     Context mContext;
     LayoutInflater mInflater;
     private RealmResults<PendingDB> mResults;
+    private static final int EMPTY_VIEW=1;
+    private static final int ITEM=0;
+
     public PendingAdapter(Context context,RealmResults<PendingDB> results) {
         mContext=context;
         mActInterfaced=(AdaptersMainCallbackInterface)context;
         mInflater= LayoutInflater.from(context);
         mResults=results;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(mResults.size()==0||mResults==null){
+            return EMPTY_VIEW;
+        }
+        return ITEM;
     }
 
     public void update(RealmResults<PendingDB> newResults){
@@ -35,8 +50,17 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mItem=mInflater.inflate(R.layout.pending_list_item,parent,false);
-        return new PendingVH(mItem);
+        if(viewType==EMPTY_VIEW){
+            ImageView mitem=new ImageView(mContext);
+            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity=Gravity.CENTER;
+            mitem.setLayoutParams(layoutParams);
+            Glide.with(mContext).load(R.drawable.placeholder).into(mitem);
+            return new EmptyVH(mitem);
+        }else {
+            View mItem = mInflater.inflate(R.layout.pending_list_item, parent, false);
+            return new PendingVH(mItem);
+        }
     }
 
     @Override
@@ -61,6 +85,9 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
+        if(mResults.size()==0||mResults==null){
+            return EMPTY_VIEW;
+        }
         return mResults.size();
     }
 
@@ -75,6 +102,13 @@ public class PendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             comIB=(ImageButton)itemView.findViewById(R.id.ib_com_pli);
             editIB=(ImageButton)itemView.findViewById(R.id.ib_edit_pli);
             dateTV=(TextView)itemView.findViewById(R.id.tv_time_pli);
+        }
+    }
+
+    public static class EmptyVH extends RecyclerView.ViewHolder{
+
+        public EmptyVH(View itemView) {
+            super(itemView);
         }
     }
 }

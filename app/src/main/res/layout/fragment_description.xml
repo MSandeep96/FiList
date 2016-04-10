@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.sande.filist.Fragments.ViewCompletedFragments.DescriptionFragment">
-    <TextView
+    <EditText
         android:id="@+id/desc_tv_fd"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
         />
 
 </LinearLayout>

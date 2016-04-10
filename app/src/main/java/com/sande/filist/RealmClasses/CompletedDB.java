@@ -20,7 +20,7 @@ public class CompletedDB extends RealmObject {
     public String comDesc;
     @PrimaryKey
     public long comTimeComp;
-    public String imageURIs;
+    public String imagesString;
     public String firstImage;
     public long dateAdded;
     public String task;
@@ -39,16 +39,27 @@ public class CompletedDB extends RealmObject {
 
     public void setImageUris(ArrayList<Uri> imgs) {
         firstImage = imgs.get(0).toString();
-        String imgUris = "";
+        StringBuilder mStrBui=new StringBuilder();
         for (Uri x : imgs) {
-            imgUris += x.toString() + "*";
+            mStrBui.append(x.toString());
+            mStrBui.append("*");
         }
-        imageURIs=imgUris;
+        imagesString =mStrBui.toString();
+    }
+
+    public void setImageStrings(ArrayList<String> imgs) {
+        firstImage = imgs.get(0);
+        StringBuilder mStrBui=new StringBuilder();
+        for (String x : imgs) {
+            mStrBui.append(x);
+            mStrBui.append("*");
+        }
+        imagesString =mStrBui.toString();
     }
 
     public ArrayList<String> getImageStrings() {
-        if(imageURIs!=null) {
-            String[] imgPaths = imageURIs.split("[*]");
+        if(imagesString !=null) {
+            String[] imgPaths = imagesString.split("[*]");
             return new ArrayList<String>(Arrays.asList(imgPaths));
         }
         return null;

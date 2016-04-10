@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sande.filist.R;
@@ -27,6 +31,8 @@ public class DescriptionFragment extends Fragment {
     private long dateAdded;
     private View mView;
     private CompletedDB comObj;
+    private EditText mDesc;
+    private boolean isInEditable;
 
 
     public DescriptionFragment() {
@@ -49,6 +55,7 @@ public class DescriptionFragment extends Fragment {
             dateAdded = getArguments().getLong(DATE);
         }
         comObj= Realm.getDefaultInstance().where(CompletedDB.class).equalTo("comTimeComp",dateAdded).findFirst();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -64,8 +71,41 @@ public class DescriptionFragment extends Fragment {
         mView=getView();
         if(mView!=null){
             //// TODO: 08-Apr-16 Add time completed and time added also look up location
-            TextView mDesc=(TextView)mView.findViewById(R.id.desc_tv_fd);
+            mDesc=(EditText) mView.findViewById(R.id.desc_tv_fd);
             mDesc.setText(comObj.comDesc);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.task_fragment_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.edit_menu_tfm) {
+            if (!isInEditable) {
+                mDesc.setEnabled(true);
+                item.setTitle("Add");
+                isInEditable = true;
+                if(mDesc.getText().toString().equals("No description provided.")){
+                    mDesc.setText("");
+                }
+            }else{
+                Realm.getDefaultInstance().beginTransaction();
+                if(mDesc.getText().length()==0){
+                    comObj.comDesc="No description provided.";
+                    mDesc.setText("No description provided.");
+                }else{
+                    comObj.comDesc=mDesc.getText().toString();
+                }
+                Realm.getDefaultInstance().commitTransaction();
+                mDesc.setEnabled(false);
+                item.setTitle("Edit");
+                isInEditable=false;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

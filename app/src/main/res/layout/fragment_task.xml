@@ -4,16 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.sande.filist.Fragments.ViewCompletedFragments.TaskFragment">
-    <TextView
+    <EditText
         android:id="@+id/title_tv_ftask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="23sp"/>
+        android:textSize="23sp"
+        android:enabled="false"/>
 
-    <TextView
+    <EditText
         android:id="@+id/task_tv_ftask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         />
 
 </LinearLayout>

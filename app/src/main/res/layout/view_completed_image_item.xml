@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:id="@+id/iv_vcii"
-    />
+    android:padding="2dp"
+    android:background="@drawable/image_background"
+    android:clickable="true"
+    android:id="@+id/ll_vcii">
+
+    <ImageView
+        android:id="@+id/iv_vcii"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+
+</LinearLayout>

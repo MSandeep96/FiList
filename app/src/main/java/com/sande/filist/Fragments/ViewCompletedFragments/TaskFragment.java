@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sande.filist.R;
 import com.sande.filist.RealmClasses.CompletedDB;
@@ -24,11 +29,15 @@ public class TaskFragment extends Fragment {
     private CompletedDB comObj;
     private long dateAdded;
     private View mView;
+    private EditText mTitle;
+    private EditText mTask;
+    private boolean isInEditable = false;
 
 
     public TaskFragment() {
         // Required empty public constructor
     }
+
     public static TaskFragment newInstance(long date) {
         TaskFragment fragment = new TaskFragment();
         Bundle args = new Bundle();
@@ -43,7 +52,8 @@ public class TaskFragment extends Fragment {
         if (getArguments() != null) {
             dateAdded = getArguments().getLong(ARG_DATE);
         }
-        comObj= Realm.getDefaultInstance().where(CompletedDB.class).equalTo("comTimeComp",dateAdded).findFirst();
+        comObj = Realm.getDefaultInstance().where(CompletedDB.class).equalTo("comTimeComp", dateAdded).findFirst();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -55,12 +65,48 @@ public class TaskFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mView=getView();
+        mView = getView();
         if (mView != null) {
-            TextView mTitle=(TextView) mView.findViewById(R.id.title_tv_ftask);
+            mTitle = (EditText) mView.findViewById(R.id.title_tv_ftask);
             mTitle.setText(comObj.comTitle);
-            TextView mTask=(TextView)mView.findViewById(R.id.task_tv_ftask);
+            mTask = (EditText) mView.findViewById(R.id.task_tv_ftask);
             mTask.setText(comObj.task);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.task_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.edit_menu_tfm) {
+            if (!isInEditable) {
+                mTitle.setEnabled(true);
+                mTask.setEnabled(true);
+                item.setTitle("Add");
+                isInEditable = true;
+            }else{
+                if(mTask.getText().length()==0 && mTitle.getText().length()==0){
+                    Toast.makeText(getContext(), "Neither can be empty", Toast.LENGTH_SHORT).show();
+                }else if(mTask.getText().length()==0){
+                    Toast.makeText(getContext(), "Task cant be empty", Toast.LENGTH_SHORT).show();
+                }else if(mTitle.getText().length()==0){
+                    Toast.makeText(getContext(),"Title can't be empty",Toast.LENGTH_SHORT).show();
+                }else {
+                    Realm.getDefaultInstance().beginTransaction();
+                    comObj.comTitle=mTitle.getText().toString();
+                    comObj.task=mTask.getText().toString();
+                    Realm.getDefaultInstance().commitTransaction();
+                    mTitle.setEnabled(false);
+                    mTask.setEnabled(false);
+                    item.setTitle("Edit");
+                    isInEditable = false;
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,14 +1,24 @@
 package com.sande.filist.Fragments.ViewCompletedFragments;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +39,7 @@ public class ImagesCompletedFragment extends Fragment {
     private CompletedDB mComObj;
     private Context mContext;
     private View mView;
+    private ViewCompletedImageAdapter mAdapter;
 
 
     public ImagesCompletedFragment() {
@@ -50,6 +61,7 @@ public class ImagesCompletedFragment extends Fragment {
             dateAdded = getArguments().getLong(ARG_DATE);
         }
         mComObj= Realm.getDefaultInstance().where(CompletedDB.class).equalTo("comTimeComp",dateAdded).findFirst();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -65,10 +77,29 @@ public class ImagesCompletedFragment extends Fragment {
         mContext=getContext();
         mView=getView();
         if(mView!=null){
-            RecyclerView mRecycler=(RecyclerView)mView.findViewById(R.id.rv_fic);
+            final RecyclerView mRecycler=(RecyclerView)mView.findViewById(R.id.rv_fic);
             mRecycler.setLayoutManager(new LinearLayoutManager(mContext));
-            ViewCompletedImageAdapter mAdapter=new ViewCompletedImageAdapter(mContext,mComObj.getImageStrings());
+            mAdapter=new ViewCompletedImageAdapter(mContext,mComObj.getImageStrings());
             mRecycler.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.images_completed_frag_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.selc_id){
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAdapter.setSelectable(false);
     }
 }

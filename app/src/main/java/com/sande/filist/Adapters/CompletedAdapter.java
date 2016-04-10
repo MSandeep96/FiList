@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +36,8 @@ public class CompletedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private LayoutInflater mInflater;
     private RealmResults<CompletedDB> mResults;
     private AdaptersMainCallbackInterface mActInterfaced;
+    private final int EMPTY_VIEW=0;
+    private final int ITEM=1;
 
     public CompletedAdapter(Context context, RealmResults<CompletedDB> objs) {
         mContext = context;
@@ -43,9 +47,26 @@ public class CompletedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(mResults.size()==0 || mResults==null){
+            return EMPTY_VIEW;
+        }
+        return ITEM;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View mView = mInflater.inflate(R.layout.completed_list_item, parent, false);
-        return new ComViewHolder(mView);
+        if(viewType==EMPTY_VIEW){
+            ImageView mitem=new ImageView(mContext);
+            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity= Gravity.CENTER;
+            mitem.setLayoutParams(layoutParams);
+            Glide.with(mContext).load(R.drawable.placeholder).into(mitem);
+            return new ComEmptyVH(mitem);
+        }else {
+            View mView = mInflater.inflate(R.layout.completed_list_item, parent, false);
+            return new ComViewHolder(mView);
+        }
     }
 
     @Override
@@ -84,6 +105,12 @@ public class CompletedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mTitleView = (TextView) itemView.findViewById(R.id.title_tv_cli);
             mDateComp = (TextView) itemView.findViewById(R.id.completedDate_tv_cli);
             mButton = (Button) itemView.findViewById(R.id.btn_cli);
+        }
+    }
+
+    private static class ComEmptyVH extends RecyclerView.ViewHolder {
+        public ComEmptyVH(ImageView mitem) {
+            super(mitem);
         }
     }
 }

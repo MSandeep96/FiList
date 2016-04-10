@@ -83,6 +83,7 @@ public class Inspiration extends Fragment implements APIConstants {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mContext=getContext();
+        setRetainInstance(true);
     }
 
     private void makeRequest(){
@@ -151,6 +152,8 @@ public class Inspiration extends Fragment implements APIConstants {
         }
         return mView;
     }
+
+    // TODO: 10-Apr-16 make recyclerview without layout for images
 
     private String getReqUrl(){
         //// TODO: 09-Apr-16 Maybe spanner with other tags or user specifies keyword in settings fragment
